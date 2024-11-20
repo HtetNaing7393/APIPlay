@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>API analysis page</title>
+    </head>
+
+<body>
+    <!-- <form action="/" method="POST">
+        <input type="text" name="url" id="url" />
+        <input type="submit" value="Add URL" id="btn_url" />
+    </form> -->
+    <div class="grid-container">
+        <div class="grid-item">
+            <button id="analyze" onclick="callFunction()">APIs Guru</button>
+        </div>
+        <div id="result" class="grid-item"></div>
+    </div>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/get_data.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/chart.js') }}"></script>
+</body>
+
+</html>
