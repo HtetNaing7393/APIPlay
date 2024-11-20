@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>API analysis page</title>
-    </head>
+</head>
 
 <body>
     <!-- <form action="/" method="POST">
@@ -15,9 +15,18 @@
     </form> -->
     <div class="grid-container">
         <div class="grid-item">
-            <button id="analyze" onclick="callFunction()">APIs Guru</button>
+            <div class = "sub-grid-item">
+                <div><button id="analyze" type="button" onclick="callFunction()">APIs Guru</button></div>
+            </div>
+            <div class="sub-grid-item">Data Info</div>
+            <div class="sub-grid-item"> Some other Inof</div>
+            <div class="sub-grid-item"> Some additional Inof</div>
         </div>
-        <div id="result" class="grid-item"></div>
+        <div class="grid-item">
+            <div>
+                <svg width="300" height="300"></svg>
+            </div>
+        </div>
     </div>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/get_data.js') }}"></script>

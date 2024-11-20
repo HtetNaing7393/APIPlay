@@ -5,9 +5,10 @@ function callFunction() {
     fetch("/button-click", {
         method: "POST"
     })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
-            document.getElementById("result").innerText = data;
+            const array_data = data;
+            update = update_render(data);
             button.disabled = false;
         });
 }

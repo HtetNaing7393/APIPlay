@@ -210,7 +210,9 @@ lock = asyncio.Lock()
 # list to house api endpoints
 api_endpoints = []
 
-version_info = [0, 0, 0]
+version_info = []
+
+version_data = [0, 0, 0]
 
 versions_count = {
     "total": 0,
@@ -264,7 +266,7 @@ def get_links(link):
     response = requests.get(link)
     item = response.json()
     links_list = []
-    count = 1000000
+    count = 10
 
     # access the json object to locate "versions" header and the "swaggerURL" header
     for key, value in item.items():
@@ -362,10 +364,10 @@ def extract_version_location():
 
     for l in api_endpoints:
         if locate_version(l):
-            version_info[0] += 1
+            version_data[0] += 1
         else:
-            version_info[1] += 1
-        version_info[2] += 1
+            version_data[1] += 1
+        version_data[2] += 1
 
 
 def locate_version(link):
@@ -393,7 +395,7 @@ def execute(url):
     links = get_links(url)
     asyncio.run(get_all_data(links))
     extract_version_location()
-    return version_info
+    return version_data
 
 
 ##### Functions for printing information #####

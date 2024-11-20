@@ -1,9 +1,10 @@
-const width = 500;
-const height = 500;
+
+const width = 300;
+const height = 300;
 const radius = Math.min(width, height) / 2;
 
 // Test data
-const data = [10, 20, 30, 40];
+let input = [10, 20, 30, 40];
 
 
 const svg = d3.select("svg")
@@ -18,28 +19,40 @@ const arc = d3.arc()
     .innerRadius(0)
     .outerRadius(radius)
 
-const arcs = svg.selectAll("arc")
-    .data(pie(data)) // My own data will come here
-    .enter()
-    .append("g")
-    .attr("class", "arc");
+function render(data) {
+
+    const arcs = svg.selectAll("arc")
+        .data(pie(data)) // My own data will come here
+        .enter()
+        .append("g")
+        .attr("class", "arc");
 
 
-// Adding color to the piechart
-arcs.append("path")
-    .attr("fill", function (d, i) { return colour(i); })
-    .attr("d", arc);
+    // Adding color to the piechart
+    arcs.append("path")
+        .attr("fill", function (d, i) { return colour(i); })
+        .attr("d", arc);
 
-// Adding labels to the piechart
-arcs.append("text")
-    .attr("transform", function (d) {
-        let degree = arc.centroid(d);
-        degree[0] *= 1.5;
-        degree[1] *= 1.5;
-        return "translate(" + degree + ")";
-    })
-    .attr("text-anchor", "middle")
-    .text(function (d, i) { return data[i]; });
+    // Adding labels to the piechart
+    arcs.append("text")
+        .attr("transform", function (d) {
+            let degree = arc.centroid(d);
+            degree[0] *= 1.5;
+            degree[1] *= 1.5;
+            return "translate(" + degree + ")";
+        })
+        .attr("text-anchor", "middle")
+        .text(function (d, i) { return data[i]; });
+}
+
+
+function update_render(new_input) {
+    render(new_input);
+}
+
+render(input);
+
+
 
 
 // Test button for selenium
