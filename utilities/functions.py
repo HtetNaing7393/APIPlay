@@ -4,95 +4,6 @@ import json
 import aiohttp
 import asyncio
 
-# the function that links between app and functions
-
-
-def process(data):
-    identify_version(data["url"], data["info"])
-    return get_api_info(data["url"], data["api_header"], data["api_key"])
-
-
-# function to identiy versioning format
-def identify_version(url, info):
-    pattern = r'/v(\d+(\.\d)*)/'
-    match = re.search(pattern, url)
-
-    if match:  # version in the URL but not in the domain name
-        version = match.group()[1:-1]
-
-        info["version"] = version
-
-        info["domain"] = "url"
-
-        info["identifier"] = identify_format(version)
-    else:  # version in the URL and in the domain name
-        pattern_2 = r'v(\d+(\.\d)*)'
-        match = re.search(pattern_2, url)
-        version = match.group()
-        if match:
-            info["version"] = version
-
-            info["domain"] = "url"
-
-            info["identifier"] = identify_format(version)
-        else:
-            pass
-        # some other versiong format and methods
-
-
-# function to identify versioning format
-def identify_format(version):
-    sem_ver = r"^v\d+\.\d+\.\d+$"
-    v_star = r"^v\d+"
-    date = r"^\d{2}-\d{2}-\d{4}$"
-
-    if re.search(sem_ver, version):
-        return "SemVer"
-
-    if re.search(v_star, version):
-        return "v*"
-
-    if re.search(date, version):
-        return "date"
-
-    return "something else"
-
-
-# retrive api info and proccess it inot json
-def get_api_info(url, header, key):
-    url = f"{url}"
-    headers = {header: key}
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        api_header = format_json(response.headers)
-        # api_body = response.text
-        # api_body = format_json(api_body)
-        return api_header
-    else:
-        print(f"Failed to retrive data {response.status_code}")
-        return
-
-# function to formate a json object
-
-
-def format_json(data):
-    map = []
-    for k, v in data.items():
-        map.append({"header": k, "value": v})
-    return map
-
-
-####### __________________This is the functional code__________##############
-# version identifiers regex queries
-# identifiers = {
-#     "sem_ver_3": r"^(v|)\d+\.\d+\.\d+$",
-#     "sem_ver_2": r"^(v|)\d+\.\d+$",
-#     "v_star": r"v\d+$",
-#     "integer2": r"^(d\{3}|\d{2}|\d{1})+$",
-#     "integer": r"^\d+$",
-#     "date_yyyy_mm_dd": r"^(?:\d{4}-\d{2}-\d{2}|\d{4}\.\d{2}\.\d{2})$"
-# }
 
 # lists of versioning group
 versions = {
@@ -116,89 +27,6 @@ versions_count = {
 
 # return the number of versions in the file
 
-
-def versions_numbers():
-    return versions_count
-
-# retrive api info and proccess it into json
-
-
-def get_info(url):
-    url = f"{url}"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
-        # version_list = locate_header(data)
-        # identify_version(version_list)
-        # versions_count["total"] = versions_count["sem_ver_3"] + versions_count["sem_ver_2"] + versions_count["v_star"] + versions_count["integer"] + versions_count["date_yyyy_mm_dd"] + versions_count["others"]
-        # print(versions_count["total"])
-        # print_results()
-        links = get_links(data)
-        print(len(links))
-        # for l in links:
-        #     print(l)
-
-        api_header = ""
-        return api_header
-    else:
-        print(f"Failed to retrive data {response.status_code}")
-        return
-
-
-def locate_version(item):
-    version_list = []
-    for key, value in item.items():
-        sub = value["versions"]
-        for k, v in sub.items():
-            version_list.append(v["info"]["version"])
-    # print(f"Number of APIs: {len(api)},  number of specifications: {count}")
-    return version_list
-
-
-# def identify_version(version_list):
-#     for version in version_list:
-#         identify(version)
-
-
-# def identify(version):
-#     if re.match(identifiers["date_yyyy_mm_dd"], version):
-#         versions["date_yyyy_mm_dd"].append(version)
-#         versions_count["date_yyyy_mm_dd"] += 1
-#     elif re.match(identifiers["v_star"], version):
-#         versions["v_star"].append(version)
-#         versions_count["v_star"] += 1
-#     elif re.match(identifiers["integer"], version):
-#         versions["integer"].append(version)
-#         versions_count["integer"] += 1
-#     elif re.match(identifiers["sem_ver_3"], version):
-#         versions["sem_ver_3"].append(version)
-#         versions_count["sem_ver_3"] += 1
-#     elif re.match(identifiers["sem_ver_2"], version):
-#         versions["sem_ver_2"].append(version)
-#         versions_count["sem_ver_2"] += 1
-#     else:
-#         versions["others"].append(version)
-#         versions_count["others"] += 1
-
-# For printing out results
-
-
-def print_results():
-    # print_list(versions["others"])
-    print(f"Semver3: {versions['sem_ver_3']}")
-    # print(f"Semver2: {len(versions['sem_ver_2'])}")
-    # print(f"V_star: {len(versions['v_star'])}")
-    # print(f"Integer: {len(versions['integer'])}")
-    # print(f"Date: {len(versions['date_yyyy_mm_dd'])}")
-    print(f"Others: {len(versions['others'])}")
-    print(f'Total version numbers: {len(versions["sem_ver_3"]) + len(versions["sem_ver_2"]) + len(versions["v_star"])
-          + len(versions["integer"]) + len(versions["date_yyyy_mm_dd"]) + len(versions["others"])}')
-
-
-def print_list(list):
-    for l in list:
-        print(l)
 
 ##################################################################################################
 ##################################### This is the serious code ###################################
@@ -266,7 +94,7 @@ def get_links(link):
     response = requests.get(link)
     item = response.json()
     links_list = []
-    count = 10
+    count = 5
 
     # access the json object to locate "versions" header and the "swaggerURL" header
     for key, value in item.items():
@@ -316,12 +144,10 @@ async def get_data(session, link):
 
         # lock to prevent simultaneous accessing of the shared list
         async with lock:
-            retrive_data(data, link)
-
-defects = []
+            retrive_data(data)
 
 
-def retrive_data(data, link):
+def retrive_data(data):
     """
     Extract API endpoints from each swaggerURL
     Parameters:
@@ -391,11 +217,42 @@ def locate_version(link):
     return False
 
 
+def compile_version_data():
+    version_information = []
+    # identify_all_versions()
+    version_information.append(version_data)
+    version_information.append(len(version_info))
+    # version_information.append(versions_count)
+    return version_information
+
+
+def reset_data():
+    global api_endpoints
+    api_endpoints = []
+    global version_info
+    version_info = []
+    global version_data
+    version_data = [0, 0, 0]
+    global versions_count
+    versions_count = {
+        "total": 0,
+        "sem_ver_3": 0,
+        "sem_ver_2": 0,
+        "v_star": 0,
+        "integer": 0,
+        "date_yyyy_mm_dd": 0,
+        "others": 0
+    }
+    print("sanity check")
+
+
 def execute(url):
+    reset_data()
     links = get_links(url)
     asyncio.run(get_all_data(links))
     extract_version_location()
-    return version_data
+    result = compile_version_data()
+    return result
 
 
 ##### Functions for printing information #####
@@ -419,55 +276,3 @@ def print_version_info():
 
 def display_success():
     return "Success,,,,F Yeah!!!"
-
-# def test_data(url):
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         data = response.json()
-#         keys = data.keys()
-#         for k in keys:
-#             if k == "adyen.com:BalancePlatformService":
-#                 sub = data["adyen.com:BalancePlatformService"]
-#                 sub1 = sub["versions"]
-#                 data = sub1.keys()
-#                 print(data)
-#                 break
-
-# for k, v in data.items():
-#     if k == "adyen.com:BalancePlatformService":
-#         key = v["versions"]
-#         data = key.keys()
-#         print(data)
-#     else:
-#         print("didn't match")
-#     break
-# for i in key:
-#     print(i)
-
-
-# test_data("https://api.apis.guru/v2/list.json")
-
-# links = ["https://api.apis.guru/v2/cache/logo/",
-#          "https://api.apis.guru/v2/cache/logo/",
-#          "https://api.apis.guru/cache/logo/2024-09-22",
-#          "https://api.apis.guru/2.3.4/cache/logo/",
-#          "https://api.v2.apis.guru/cache/logo/",
-#          "https://api.apis.guru/v2.3/cache/logo/",
-#          "https://api.apis.guru/cache/v1/logo/",
-#          "https://api.apis.guru/cache/logo/"]
-# links = ["https://api.apis.guru/v2/cache/logo/"]
-
-
-# def run():
-#     extract_version(links)
-#     for v in version_info:
-#         print(v)
-# run()
-
-# extract_version(links)
-
-
-# identify_version()
-# Test run the code
-# get_info("https://api.apis.guru/v2/list.json")  # test run the code
-# get_endpoints("https://api.apis.guru/v2/specs/1password.com/events/1.0.0/openapi.json")
