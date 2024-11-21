@@ -27,9 +27,7 @@ def home():
 
 @app.route("/button-click", methods = ["POST"])
 def button_click():
-    # result = execute("https://api.apis.guru/v2/list.json")
-    # result = "Jesus"
-    result = [1, 3, 2]
+    result = execute("https://api.apis.guru/v2/list.json")
     return result
 
 if __name__ == "__main__":
