@@ -13,40 +13,55 @@
         <input type="text" name="url" id="url" />
         <input type="submit" value="Add URL" id="btn_url" />
     </form> -->
+    <div><button id="analyze" type="button" onclick="callFunction()">APIs Guru</button></div>
     <div class="grid-container">
         <div class="grid-item-1">
-            <div class = "sub-grid-item-1">
-                <div><button id="analyze" type="button" onclick="callFunction()">APIs Guru</button></div>
-            </div>
             <div class="sub-grid-item-1">
                 <div class="display-box-wrapper">
-                    <div class="label">Total APIs:</div>
-                    <div class="display-box" id="num_apis">Content...</div>
+                    <div class="label">Total number of APIs:</div>
+                    <div class="display-box" id="num_apis">0</div>
                 </div>
                 <div class="display-box-wrapper">
-                    <div class="label">Total EndPoints:</div>
-                    <div class="display-box" id="num_endpoints">...</div>
+                    <div class="label">Total number of API versions:</div>
+                    <div class="display-box">0</div>
                 </div>
                 <div class="display-box-wrapper">
-                    <div class="label">Version Count:</div>
-                    <div class="display-box">Content...</div>
+                    <div class="label">Total number of endpoints:</div>
+                    <div class="display-box" id="num_endpoints">0</div>
+                </div>
+                <div class="display-box-wrapper">
+                    <div class="label">Total number of endpoints version:</div>
+                    <div class="display-box" id="num_endpoints">0</div>
                 </div>
             </div>
-            <div class="sub-grid-item-1"> Some other Inof</div>
-            <div class="sub-grid-item-1"> Some additional Inof</div>
         </div>
         <div class="grid-item-2">
             <div class="sub-grid-item-2">
-                <svg width="300" height="300"></svg>
+                <svg id="barchart" width="500" height="400"></svg>
             </div>
+        </div>
+        <div class="grid-item-2">
             <div class="sub-grid-item-2">
-                Additional information
+                <div class="display-box-wrapper">
+                    <div class="label">Number of version in the URL:</div>
+                    <div class="display-box" id="num_endpoints">0</div>
+                </div>
+                <div class="display-box-wrapper">
+                    <div class="label">Number of version not in the URL:</div>
+                    <div class="display-box" id="num_endpoints">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-item-2">
+            <div class="sub-grid-item-2">
+                <svg id="piechart" width="500" height="400"></svg>
             </div>
         </div>
     </div>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/get_data.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/chart.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/barchart.js') }}"></script>
+    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/piechart.js') }}"></script> -->
 </body>
 
 </html>

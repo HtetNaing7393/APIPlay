@@ -1,25 +1,25 @@
 
-const width = 300;
-const height = 300;
-const radius = Math.min(width, height) / 2;
+const width_1 = 300;
+const height_1 = 300;
+const radius = Math.min(width_1, height_1) / 2;
 
 // Test data
-let input = [10, 20, 30, 40];
+const input_1 = [30, 40];
+const colour_1 = d3.scaleOrdinal(d3.schemeCategory10);
 
 
-const svg = d3.select("svg")
-    .attr("width", width)
-    .attr("heigth", height)
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")");
+function draw(data, selector) {
 
-const colour = d3.scaleOrdinal(d3.schemeCategory10);
-const pie = d3.pie();
-const arc = d3.arc()
-    .innerRadius(0)
-    .outerRadius(radius)
+    const svg = d3.select(selector)
+        .attr("width", width_1)
+        .attr("heigth", height_1)
+        .append("g")
+        .attr("transform", "translate(" + width_1 / 2 + ", " + height_1 / 2 + ")");
 
-function render(data) {
+    const pie = d3.pie();
+    const arc = d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius)
 
     const arcs = svg.selectAll("arc")
         .data(pie(data)) // My own data will come here
@@ -46,16 +46,13 @@ function render(data) {
 }
 
 
-function update_render(new_input) {
-    render(new_input);
+function update_render_1(new_input) {
+    render_1(new_input, "#piechart");
 }
 
-render(input);
+render_1(input, "piechart");
 
 
-
-
-// Test button for selenium
 
 
 

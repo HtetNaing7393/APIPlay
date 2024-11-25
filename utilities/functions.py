@@ -94,7 +94,7 @@ def get_links(link):
     response = requests.get(link)
     item = response.json()
     links_list = []
-    count = 5
+    count = 100000000
 
     # access the json object to locate "versions" header and the "swaggerURL" header
     for key, value in item.items():
