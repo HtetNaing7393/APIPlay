@@ -16,7 +16,7 @@ body {
 .grid-item-2 {
     background: linear-gradient(to bottom, rgb(83, 74, 5), rgb(34, 173, 57));
     /* width: 40vw; */
-    height: 65vh;
+    height: 60vh;
     color: black;
     padding: 20px;
     text-align: center;
@@ -26,14 +26,14 @@ body {
     grid-template-rows: 1fr 1fr;
     gap: 10px;
     align-content: center;
-    align-content: center;
 }
 
 
 .sub-grid-item-1,
 .sub-grid-item-2 {
-    border: 2px solid red;
+    /* border: 2px solid red; */
     border-radius: 10px;
+    margin: 10px;
     padding: 10px;
     height: 100%;
 }
@@ -43,7 +43,9 @@ button {
     cursor: pointer;
     padding: 10px 20px;
     font-size: 20px;
-    width: 200px;
+    font-weight: bolder;
+    font-family: 'Rajdhani', sans-serif;
+    width: 300px;
     height: 50px;
     border: 2px solid darkgreen;
     border-radius: 10px;
@@ -75,10 +77,12 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Arial', sans-serif;
-    color: rgba(0, 255, 255, 0.8);
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.8), 0 0 10px rgba(0, 255, 255, 0.8);
-    margin: 20px auto;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgba(255, 100, 255, 0.8);
+    text-shadow: 0 0 5px rgba(200, 50, 200, 0.8), 0 0 10px rgba(200, 50, 200, 0.8);
+    margin: 10px auto;
     position: relative;
     overflow: hidden;
 }
@@ -105,27 +109,30 @@ button:hover {
     }
 }
 
-
 .label {
     font-weight: bold;
-    font-family: Arial, sans-serif;
-    font-size: 15px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
     margin-right: 10px;
     align-content: center;
-    color: rgba(100, 200, 255, 0.8);
+    color: rgba(255, 255, 100, 0.8);
     width: 280px;
     height: 30px;
     white-space: nowrap;
     text-align: right;
 }
 
-
+label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+}
 
 
 
 /* General SVG styling */
-#barchart {
-    font-family: 'Roboto', sans-serif;
+svg {
+    font-family: 'Rajdhani', sans-serif;
     background-color: #121212;
     color: white;
     border-radius: 10px;
@@ -141,7 +148,9 @@ button:hover {
 }
 
 .axis-label {
+    font-family: 'Rajdhani', sans-serif;
     font-size: 12px;
+    font-weight: bold;
     fill: #bbb;
 }
 
@@ -150,16 +159,18 @@ button:hover {
     stroke: #fff;
 }
 
-/* .tooltip {
+.tooltip {
     position: absolute;
     text-align: center;
-    width: 60px;
-    height: 28px;
+    width: 150px;
+    height: 40px;
     padding: 2px;
-    font: 12px sans-serif;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
     background: rgba(0, 0, 0, 0.7);
     color: #fff;
-    border: 1px solid #00f;
+    border: 2px solid #00f;
     border-radius: 8px;
     pointer-events: none;
-} */
+}

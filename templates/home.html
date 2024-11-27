@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>API analysis page</title>
 </head>
@@ -38,10 +39,11 @@
         <div class="grid-item-2">
             <div class="sub-grid-item-2">
                 <svg id="barchart" width="500" height="400"></svg>
+                <label>Version Information</label>
             </div>
         </div>
         <div class="grid-item-2">
-            <div class="sub-grid-item-2">
+            <div class="sub-grid-item-1">
                 <div class="display-box-wrapper">
                     <div class="label">Number of version in the URL:</div>
                     <div class="display-box" id="num_endpoints">0</div>
@@ -54,7 +56,8 @@
         </div>
         <div class="grid-item-2">
             <div class="sub-grid-item-2">
-                <svg id="piechart" width="500" height="400"></svg>
+                <svg id="barchart2" width="500" height="400"></svg>
+                <label>Percentage</label>
             </div>
         </div>
     </div>
