@@ -1,17 +1,20 @@
+/* Set the background of the body to a linear gradient and center items */
 body {
     background: linear-gradient(to right, lightyellow, rgb(232, 200, 140));
     justify-items: center;
     padding: 5px;
 }
 
+/* Define a grid container with two columns and two rows, with gaps and padding */
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     gap: 20px;
-    padding: 10px
+    padding: 10px;
 }
 
+/* Style for grid items with a background gradient, height, color, padding, and border */
 .grid-item-1,
 .grid-item-2 {
     background: linear-gradient(to bottom, rgb(83, 74, 5), rgb(34, 173, 57));
@@ -22,13 +25,13 @@ body {
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 20px;
-    display: grid;  
+    display: grid;
     grid-template-rows: 1fr 1fr;
     gap: 10px;
     align-content: center;
 }
 
-
+/* Style for sub-grid items with border radius, margin, padding, and full height */
 .sub-grid-item-1,
 .sub-grid-item-2 {
     /* border: 2px solid red; */
@@ -38,7 +41,7 @@ body {
     height: 100%;
 }
 
-
+/* Style for buttons with cursor, padding, font, size, border, background, and transition effects */
 button {
     cursor: pointer;
     padding: 10px 20px;
@@ -54,11 +57,13 @@ button {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Hover effect for buttons with background color and box shadow changes */
 button:hover {
     background-color: lightgreen;
     box-shadow: inset 4px 6px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Flex container for display boxes with spacing and alignment */
 .display-box-wrapper {
     display: flex;
     justify-content: space-around;
@@ -66,7 +71,7 @@ button:hover {
     margin: 10px;
 }
 
-
+/* Style for display boxes with size, background, border, shadow, font, and positioning */
 .display-box {
     width: 180px;
     height: 30px;
@@ -87,6 +92,7 @@ button:hover {
     overflow: hidden;
 }
 
+/* Animation effect for display boxes */
 .display-box::before {
     content: " ";
     position: absolute;
@@ -99,6 +105,7 @@ button:hover {
     animation: scan 3s infinite linear;
 }
 
+/* Keyframes for the scan animation */
 @keyframes scan {
     0% {
         transform: translateY(-50%) translateX(-100%);
@@ -109,6 +116,7 @@ button:hover {
     }
 }
 
+/* Style for labels with font, size, color, and alignment */
 .label {
     font-weight: bold;
     font-family: 'Rajdhani', sans-serif;
@@ -122,15 +130,14 @@ button:hover {
     text-align: right;
 }
 
+/* General label styling */
 label {
     font-family: 'Rajdhani', sans-serif;
     font-size: 18px;
     font-weight: bold;
 }
 
-
-
-/* General SVG styling */
+/* General SVG styling with background, color, and shadow */
 svg {
     font-family: 'Rajdhani', sans-serif;
     background-color: #121212;
@@ -139,7 +146,7 @@ svg {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Axis styling */
+/* Axis styling for SVG elements */
 .axis path,
 .axis line {
     fill: none;
@@ -147,6 +154,7 @@ svg {
     shape-rendering: crispEdges;
 }
 
+/* Style for axis labels in SVG */
 .axis-label {
     font-family: 'Rajdhani', sans-serif;
     font-size: 12px;
@@ -154,11 +162,13 @@ svg {
     fill: #bbb;
 }
 
+/* Hover effect for bars in SVG */
 .bar:hover {
     fill: #0ff;
     stroke: #fff;
 }
 
+/* Style for tooltips with positioning, font, background, and border */
 .tooltip {
     position: absolute;
     text-align: center;
