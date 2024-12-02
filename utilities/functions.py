@@ -17,9 +17,6 @@ versions = {
 }
 
 
-# return the number of versions in the file
-
-
 ##################################################################################################
 ##################################### This is the serious code ###################################
 ##################################################################################################
@@ -30,7 +27,7 @@ lock = asyncio.Lock()
 # list to house api endpoints
 api_endpoints = []
 # list to house api base urls
-api_base_ulr = []
+api_base_url = []
 # list to house api versions
 api_versions = []
 
@@ -61,7 +58,7 @@ api_versions_count = {
 identifiers = {
     "sem_ver_3": r"^(v|)\d+\.\d+\.\d+$",
     "sem_ver_2": r"^(v|)\d+\.\d+$",
-    "v_star": r"v\d+$",
+    "v_star":  r"^v(\d+)(\.\d+)?(\.\d+)?(\([a-zA-Z]+\))?$",
     "integer2": r"^(d\{3}|\d{2}|\d{1})+$",
     "integer": r"^\d+$",
     "date_yyyy_mm_dd": r"^(?:\d{4}-\d{2}-\d{2}|\d{4}\.\d{2}\.\d{2})$"
@@ -109,7 +106,7 @@ def get_links(link):
     response = requests.get(link)
     item = response.json()
     links_list = []
-    count = 30
+    count = 1000000000
 
     # access the json object to locate "versions" header and the "swaggerURL" header
     for key, value in item.items():
@@ -125,7 +122,6 @@ def get_links(link):
                 pass
 
             for k, v in sub.items():
-
                 try:
                     links_list.append(v["swaggerUrl"])
                 except:
@@ -175,10 +171,16 @@ def retrive_data(data):
     url = ""
     # Get the base URL is such data exists
     try:
-        servers = data["servers"]
-        url = servers[0]["url"]
-        api_base_ulr.append(url)
+        if "servers" in data:
+            servers = data["servers"]
+            url = servers[0]["url"]
+        elif "host" in data:
+            url = data["host"]
+        elif "basePath" in None:
+            url = data["basePath"]
+        api_base_url.append(url)
     except:
+        # print("Exception Thrown")
         pass
     finally:
         pass
@@ -190,6 +192,7 @@ def retrive_data(data):
         for l in links:
             api_endpoints.append(f"{l}")
     except:
+        # print("Exception Thrown")
         pass
     finally:
         pass
@@ -208,26 +211,45 @@ def extract_version_location():
         version_location_data[2] += 1
 
 
+test_value = 0
+
+
 def locate_and_identify_endpoint_version(link):
     """
     Split a url into multiple segments and check if the version is in the URL
+    If the version is in the URL, identify it's type
     Parameters:
     link    :   swaggerURL
     return  :   True if the version information exists in the URL, False if not
     """
 
+    # split the url by "/" to look for version information
+    global test_value
     sub_strings = link.split("/")
     for s in sub_strings:
-        conditions = [re.search(identifiers["sem_ver_3"], s),
-                      re.search(identifiers["sem_ver_2"], s),
-                      re.search(identifiers["v_star"], s),
-                      re.search(identifiers["integer2"], s),
-                      re.search(identifiers["integer"], s),
-                      re.search(identifiers["date_yyyy_mm_dd"], s)]
-        if any(conditions):
+        if look_for_version(s):
+            test_value += 1
             identify(f"{s}", endpoint_versions_count)
             return True
+        else:
+            sub_s = s.split(".")
+            for s_ in sub_s:
+                if look_for_version(s_):
+                    test_value += 1
+                    identify(f"{s}", endpoint_versions_count)
+                    print(s)
+                    return True
     return False
+
+
+def look_for_version(checked_string):
+    conditions = [re.search(identifiers["sem_ver_3"], checked_string),
+                  re.search(identifiers["sem_ver_2"], checked_string),
+                  re.search(identifiers["v_star"], checked_string),
+                  re.search(identifiers["integer2"], checked_string),
+                  re.search(identifiers["integer"], checked_string),
+                  re.search(identifiers["date_yyyy_mm_dd"], checked_string)]
+    return any(conditions)
 
 
 def compile_version_data():
@@ -288,15 +310,38 @@ def execute(url):
     # print()
     # print()
     # print(endpoint_versions_count)
-    p()
+    print(test_value)
     return result
 
 
 def p():
-    for i in api_base_ulr:
+    print(len(api_base_url))
+    for i in api_base_url:
         print(i)
 
 ##### Functions for printing information #####
 
 
-execute("https://api.apis.guru/v2/list.json")
+# execute("https://api.apis.guru/v2/list.json")
+
+def test(test_str):
+    pattern = r"^v(\d+)(\.\d+)?(\.\d+)?(\([a-zA-Z]+\))?$"
+    if re.search(pattern, test_str):
+        print("Match")
+    else:
+        print("Doesn't match")
+
+
+def run():
+    coll = ["v1.0.1", "v123", "v1.0",
+            "v1.9(alpha)", "v1", "v1aplpha",  "v5(alpha)", "v1.0.1(alpha)", "v1.0.1alpha"]
+    print(len(coll))
+    for c in coll:
+        result = test(c)
+        # print(result)
+
+
+run()
+
+##################  Test Code ####################
+########## Will Handle it later ##################
