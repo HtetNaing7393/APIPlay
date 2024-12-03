@@ -58,6 +58,11 @@ api_versions_count = {
     "location": {}
 }
 
+overall_info = {
+    "apis": 0,
+    "specifications": 0,
+    "endpoints": 0
+}
 
 # version identifiers regex queries
 identifiers = {
@@ -90,8 +95,9 @@ def get_links(link):
     response = requests.get(link)
     item = response.json()
     links_list = []
-    count = 1000000000
-
+    count = 100000000000000
+    # get the total number of APIs in the dataset
+    overall_info["apis"] = len(item)
     # access the json object to locate "versions" header and the "swaggerURL" header
     for key, value in item.items():
         if count > 0:
@@ -101,6 +107,7 @@ def get_links(link):
                 # versions = list(map(str, value["versions"].keys()))
                 api_versions.append(versions)
                 for k, v in sub.items():
+                    overall_info["specifications"] += 1
                     try:
                         links_list.append(v["swaggerUrl"])
                     except:
@@ -112,7 +119,7 @@ def get_links(link):
             finally:
                 pass
         count -= 1
-    print(f"Num of specs: {len(links_list)}")
+    # print(f"Num of specs: {len(links_list)}")
     return links_list  # the list of swagger links of each version of each api
 
 
@@ -181,6 +188,7 @@ def retrive_data(data):
         pass
     finally:
         pass
+    overall_info["endpoints"] = len(api_endpoints)
 
 
 def extract_version_location(urls, versions_count):
@@ -277,11 +285,13 @@ def compile_version_data():
     """
     Prepare and compile version infomration to send to the javascript files
     Parameters:
-    return  :   list [[url, non-url, total], version types]
+    return  :   list [overall info, api versions info, endpoint versions info]
     """
     version_information = []  # the list for returning purpose
+    version_information.append(overall_info)
     version_information.append(api_versions_count)
     version_information.append(endpoint_versions_count)
+    # print(overall_info)
     return version_information
 
 
@@ -320,6 +330,12 @@ def reset_data():
         "non-url": 0,
         "total": 0
     }
+    global overall_info
+    overall_info = {
+        "apis": 0,
+        "specifications": 0,
+        "endpoints": 0
+    }
 
 
 def execute(url):
@@ -329,24 +345,13 @@ def execute(url):
     extract_version_location(api_endpoints, endpoint_versions_count)
     extract_version_location(api_base_urls, api_versions_count)
     result = compile_version_data()  # prepare data to send to the JS file
-    print(endpoint_versions_count)
-    print(api_versions_count)
-    # print(api_versions_count)
-    # print(len(errors_apis))
-    # print(errors_apis)
-    # print(api_versions_count)
-    # print(len(api_versions))
+    # print(len(api_base_urls))
+    # print(len(api_versions_count))
     return result
 
 
-def p():
-    print(len(api_base_urls))
-    for i in api_base_urls:
-        print(i)
-
-
 # execute the script
-execute("https://api.apis.guru/v2/list.json")
+# execute("https://api.apis.guru/v2/list.json")
 
 
 ##### Functions for printing information and testing #####

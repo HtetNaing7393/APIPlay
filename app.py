@@ -3,7 +3,7 @@ import semver
 import re
 import json
 from flask import Flask, redirect, request, render_template, jsonify
-from utilities.functions import execute, display_success
+from utilities.functions import execute
 from fetch_google import get_api_data
 
 
@@ -27,9 +27,10 @@ def home():
 
 @app.route("/button-click", methods = ["POST"])
 def button_click():
-    # result = execute("https://api.apis.guru/v2/list.json")
-    result = ""
-    return result
+    result = execute("https://api.apis.guru/v2/list.json")
+    # result = '{"name": "John", "age": 30, "city": "New York"}'
+    output = json.dumps(result)
+    return output
 
 if __name__ == "__main__":
     app.run(debug=True)
