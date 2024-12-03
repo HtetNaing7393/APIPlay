@@ -31,9 +31,6 @@ api_base_urls = []
 # list to house api versions
 api_versions = []
 
-# Url, Non-U, total
-version_location_data = [0, 0, 0]
-
 # the number of version typess
 endpoint_versions_count = {
     "sem_ver_3": 0,
@@ -44,7 +41,8 @@ endpoint_versions_count = {
     "others": 0,
     "url": 0,
     "non-url": 0,
-    "total": 0
+    "total": 0,
+    "location": {}
 }
 
 api_versions_count = {
@@ -56,7 +54,8 @@ api_versions_count = {
     "others": 0,
     "url": 0,
     "non-url": 0,
-    "total": 0
+    "total": 0,
+    "location": {}
 }
 
 
@@ -145,6 +144,8 @@ async def get_data(session, link):
         async with lock:
             retrive_data(data)
 
+errors_apis = []
+
 
 def retrive_data(data):
     """
@@ -176,6 +177,7 @@ def retrive_data(data):
         for l in links:
             api_endpoints.append(f"{l}")
     except:
+        errors_apis.append(data["info"]["title"])
         pass
     finally:
         pass
@@ -193,6 +195,13 @@ def extract_version_location(urls, versions_count):
         versions_count["total"] += 1
 
 
+def find_version_location(key, versions_count):
+    if key in versions_count:
+        versions_count[key] += 1
+    else:
+        versions_count[key] = 1
+
+
 test_value = 0
 
 
@@ -208,10 +217,12 @@ def locate_and_identify_version(link, versions_count):
     # split the url by "/" to look for version information
     global test_value
     sub_strings = link.split("/")
+    location = 1
     for s in sub_strings:
         if look_for_version(s):
             test_value += 1
             identify(f"{s}", versions_count)
+            find_version_location(location, versions_count)
             return True
         else:
             sub_s = s.split(".")
@@ -219,8 +230,9 @@ def locate_and_identify_version(link, versions_count):
                 if look_for_version(s_):
                     test_value += 1
                     identify(f"{s}", versions_count)
-                    # print(s)
+                    find_version_location(location, versions_count)
                     return True
+        location += 1
     return False
 
 
@@ -268,7 +280,7 @@ def compile_version_data():
     return  :   list [[url, non-url, total], version types]
     """
     version_information = []  # the list for returning purpose
-    # identify_api_versions()
+    version_information.append(api_versions_count)
     version_information.append(endpoint_versions_count)
     return version_information
 
@@ -282,7 +294,6 @@ def reset_data():
     global api_endpoints
     api_endpoints = []
     global version_location_data
-    version_location_data = [0, 0, 0]
     global api_versions_count
     api_versions_count = {
         "total": 0,
@@ -315,14 +326,16 @@ def execute(url):
     reset_data()
     links = get_links(url)
     asyncio.run(get_all_data(links))
-    # identify version format and location of endpoints
     extract_version_location(api_endpoints, endpoint_versions_count)
     extract_version_location(api_base_urls, api_versions_count)
     result = compile_version_data()  # prepare data to send to the JS file
-    # print(endpoint_versions_count)
     print(endpoint_versions_count)
     print(api_versions_count)
-    print(len(api_versions))
+    # print(api_versions_count)
+    # print(len(errors_apis))
+    # print(errors_apis)
+    # print(api_versions_count)
+    # print(len(api_versions))
     return result
 
 
@@ -331,10 +344,12 @@ def p():
     for i in api_base_urls:
         print(i)
 
-##### Functions for printing information #####
 
-
+# execute the script
 execute("https://api.apis.guru/v2/list.json")
+
+
+##### Functions for printing information and testing #####
 
 
 def test(test_str):
@@ -351,9 +366,19 @@ def run():
     print(len(coll))
     for c in coll:
         result = test(c)
-        # print(result)
 
 
+test_string = "https://abc/v2/aa/bb/cc/dd"
+test_string1 = "abc/def/v1.1/ddd/fff/jkl"
+
+
+def version_heirarchy(str):
+    sub = str.split('/')
+    for s in sub:
+        if s is not None:
+            print(s)
+    # print(sub)
+# version_heirarchy(test_string1)
 # run()
 
 ##################  Test Code ####################
