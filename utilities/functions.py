@@ -27,7 +27,7 @@ lock = asyncio.Lock()
 # list to house api endpoints
 api_endpoints = []
 # list to house api base urls
-api_base_url = []
+api_base_urls = []
 # list to house api versions
 api_versions = []
 
@@ -41,7 +41,10 @@ endpoint_versions_count = {
     "v_star": 0,
     "integer": 0,
     "date_yyyy_mm_dd": 0,
-    "others": 0
+    "others": 0,
+    "url": 0,
+    "non-url": 0,
+    "total": 0
 }
 
 api_versions_count = {
@@ -50,7 +53,10 @@ api_versions_count = {
     "v_star": 0,
     "integer": 0,
     "date_yyyy_mm_dd": 0,
-    "others": 0
+    "others": 0,
+    "url": 0,
+    "non-url": 0,
+    "total": 0
 }
 
 
@@ -58,7 +64,7 @@ api_versions_count = {
 identifiers = {
     "sem_ver_3": r"^(v|)\d+\.\d+\.\d+$",
     "sem_ver_2": r"^(v|)\d+\.\d+$",
-    "v_star":  r"^v(\d+)(\.\d+)?(\.\d+)?(\([a-zA-Z]+\))?$",
+    "v_star":  r"v\d+(\.\d+)*(\([a-zA-Z]+\))?",
     "integer2": r"^(d\{3}|\d{2}|\d{1})+$",
     "integer": r"^\d+$",
     "date_yyyy_mm_dd": r"^(?:\d{4}-\d{2}-\d{2}|\d{4}\.\d{2}\.\d{2})$"
@@ -72,27 +78,6 @@ def identify_api_versions():
     all_versions = list(itertools.chain(*api_versions))
     for version in all_versions:
         identify(version, api_versions_count)
-
-
-def identify(version, versions_count):
-    """
-    Identify the version type of the provided "version" and keep track of the version type count
-    Parameters: 
-    version : version of an api
-
-    """
-    if re.match(identifiers["date_yyyy_mm_dd"], version):
-        versions_count["date_yyyy_mm_dd"] += 1
-    elif re.match(identifiers["v_star"], version):
-        versions_count["v_star"] += 1
-    elif re.match(identifiers["integer"], version):
-        versions_count["integer"] += 1
-    elif re.match(identifiers["sem_ver_3"], version):
-        versions_count["sem_ver_3"] += 1
-    elif re.match(identifiers["sem_ver_2"], version):
-        versions_count["sem_ver_2"] += 1
-    else:
-        versions_count["others"] += 1
 
 
 def get_links(link):
@@ -114,21 +99,21 @@ def get_links(link):
             try:
                 sub = value["versions"]  # a list of versions
                 # get the versions and add the versions to api_versions
-                versions = list(map(str, value["versions"].keys()))
+                # versions = list(map(str, value["versions"].keys()))
                 api_versions.append(versions)
+                for k, v in sub.items():
+                    try:
+                        links_list.append(v["swaggerUrl"])
+                    except:
+                        pass
+                    finally:
+                        pass
             except:
                 pass
             finally:
                 pass
-
-            for k, v in sub.items():
-                try:
-                    links_list.append(v["swaggerUrl"])
-                except:
-                    pass
-                finally:
-                    pass
         count -= 1
+    print(f"Num of specs: {len(links_list)}")
     return links_list  # the list of swagger links of each version of each api
 
 
@@ -178,9 +163,8 @@ def retrive_data(data):
             url = data["host"]
         elif "basePath" in None:
             url = data["basePath"]
-        api_base_url.append(url)
+        api_base_urls.append(f"{url}")
     except:
-        # print("Exception Thrown")
         pass
     finally:
         pass
@@ -192,31 +176,29 @@ def retrive_data(data):
         for l in links:
             api_endpoints.append(f"{l}")
     except:
-        # print("Exception Thrown")
         pass
     finally:
         pass
 
 
-def extract_version_location():
+def extract_version_location(urls, versions_count):
     """
     Extract version location in each URLs
     """
-
-    for l in api_endpoints:
-        if locate_and_identify_endpoint_version(l):
-            version_location_data[0] += 1
+    for l in urls:
+        if locate_and_identify_version(l, versions_count):
+            versions_count["url"] += 1
         else:
-            version_location_data[1] += 1
-        version_location_data[2] += 1
+            versions_count["non-url"] += 1
+        versions_count["total"] += 1
 
 
 test_value = 0
 
 
-def locate_and_identify_endpoint_version(link):
+def locate_and_identify_version(link, versions_count):
     """
-    Split a url into multiple segments and check if the version is in the URL
+    Split a given url into multiple segments and check if the version is in the URL
     If the version is in the URL, identify it's type
     Parameters:
     link    :   swaggerURL
@@ -229,20 +211,47 @@ def locate_and_identify_endpoint_version(link):
     for s in sub_strings:
         if look_for_version(s):
             test_value += 1
-            identify(f"{s}", endpoint_versions_count)
+            identify(f"{s}", versions_count)
             return True
         else:
             sub_s = s.split(".")
             for s_ in sub_s:
                 if look_for_version(s_):
                     test_value += 1
-                    identify(f"{s}", endpoint_versions_count)
-                    print(s)
+                    identify(f"{s}", versions_count)
+                    # print(s)
                     return True
     return False
 
 
+def identify(version, versions_count):
+    """
+    Identify the version type of the provided "version" and keep track of the version type count
+    Parameters: 
+    version : version of an api
+
+    """
+    if re.match(identifiers["date_yyyy_mm_dd"], version):
+        versions_count["date_yyyy_mm_dd"] += 1
+    elif re.match(identifiers["v_star"], version):
+        versions_count["v_star"] += 1
+    elif re.match(identifiers["integer"], version):
+        versions_count["integer"] += 1
+    elif re.match(identifiers["sem_ver_3"], version):
+        versions_count["sem_ver_3"] += 1
+    elif re.match(identifiers["sem_ver_2"], version):
+        versions_count["sem_ver_2"] += 1
+    else:
+        versions_count["others"] += 1
+
+
 def look_for_version(checked_string):
+    """
+    Check if a versioning format exists in the given input string
+    Parameters: 
+    checked_string  :   the input string to checked
+    return          :   True if a versioning format exists in the string, False if not
+    """
     conditions = [re.search(identifiers["sem_ver_3"], checked_string),
                   re.search(identifiers["sem_ver_2"], checked_string),
                   re.search(identifiers["v_star"], checked_string),
@@ -259,9 +268,7 @@ def compile_version_data():
     return  :   list [[url, non-url, total], version types]
     """
     version_information = []  # the list for returning purpose
-    identify_api_versions()
-
-    version_information.append(version_location_data)
+    # identify_api_versions()
     version_information.append(endpoint_versions_count)
     return version_information
 
@@ -270,6 +277,8 @@ def reset_data():
     """
     Reset values of the global varaibles to the original states
     """
+    global api_base_urls
+    api_base_urls = []
     global api_endpoints
     api_endpoints = []
     global version_location_data
@@ -282,7 +291,10 @@ def reset_data():
         "v_star": 0,
         "integer": 0,
         "date_yyyy_mm_dd": 0,
-        "others": 0
+        "others": 0,
+        "url": 0,
+        "non-url": 0,
+        "total": 0
     }
     global endpoint_versions_count
     endpoint_versions_count = {
@@ -292,7 +304,10 @@ def reset_data():
         "v_star": 0,
         "integer": 0,
         "date_yyyy_mm_dd": 0,
-        "others": 0
+        "others": 0,
+        "url": 0,
+        "non-url": 0,
+        "total": 0
     }
 
 
@@ -300,32 +315,30 @@ def execute(url):
     reset_data()
     links = get_links(url)
     asyncio.run(get_all_data(links))
-    extract_version_location()
-    identify_api_versions()
-    result = compile_version_data()
-
-    # print(api_versions_count)
-    # print()
-    # print()
-    # print()
-    # print()
+    # identify version format and location of endpoints
+    extract_version_location(api_endpoints, endpoint_versions_count)
+    extract_version_location(api_base_urls, api_versions_count)
+    result = compile_version_data()  # prepare data to send to the JS file
     # print(endpoint_versions_count)
-    print(test_value)
+    print(endpoint_versions_count)
+    print(api_versions_count)
+    print(len(api_versions))
     return result
 
 
 def p():
-    print(len(api_base_url))
-    for i in api_base_url:
+    print(len(api_base_urls))
+    for i in api_base_urls:
         print(i)
 
 ##### Functions for printing information #####
 
 
-# execute("https://api.apis.guru/v2/list.json")
+execute("https://api.apis.guru/v2/list.json")
+
 
 def test(test_str):
-    pattern = r"^v(\d+)(\.\d+)?(\.\d+)?(\([a-zA-Z]+\))?$"
+    pattern = r"v\d+(\.\d+)*(\([a-zA-Z]+\))?"
     if re.search(pattern, test_str):
         print("Match")
     else:
@@ -334,14 +347,14 @@ def test(test_str):
 
 def run():
     coll = ["v1.0.1", "v123", "v1.0",
-            "v1.9(alpha)", "v1", "v1aplpha",  "v5(alpha)", "v1.0.1(alpha)", "v1.0.1alpha"]
+            "v1.9(alpha)", "v1", "v1aplpha",  "v5(alpha)", "v1.0.1(alpha)", "v1.0.1alpha", "v212"]
     print(len(coll))
     for c in coll:
         result = test(c)
         # print(result)
 
 
-run()
+# run()
 
 ##################  Test Code ####################
 ########## Will Handle it later ##################
