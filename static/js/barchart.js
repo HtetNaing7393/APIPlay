@@ -1,6 +1,4 @@
 // Test data
-let input = [10, 20, 30, 40, 50, 60];  // Array of data values
-const categories = ["SemVer_3", "SemVer_2", "V*", "Integer", "Date", "Others"];  // Categories for the data
 const color = d3.scaleOrdinal(d3.schemeCategory10);  // Color scale for the bars
 
 // Margin and dimensions for the SVG container
@@ -73,7 +71,7 @@ function render(data, selector, categories) {
         .attr("fill", (d, i) => color(i))  // Set the fill color based on the color scale
         .on("mouseover", function (event, d) {
             tooltip.transition().duration(200).style("opacity", 0.9);  // Show tooltip
-            tooltip.html("Count: " + d)  // Set content
+            tooltip.html("Count: "+ d)  // Set content
                 .style("left", (event.pageX + 0) + "px")  // Position to the right of mouse
                 .style("top", (event.pageY - 28) + "px");  // Position above mouse
         })
@@ -82,18 +80,32 @@ function render(data, selector, categories) {
         });
 }
 
-// Function to update the bar chart with new data
-function update_render(new_input) {
+
+let input = [0, 0, 0, 0, 0, 0];
+let input2 = [0, 0];
+let input3 = [0, 0, 0, 0, 0, 0];
+let input4 = [0, 0];
+
+const categories_2 = ["URL", "Non-URL"]; // Categories for version methods
+const categories = ["SemVer_3", "SemVer_2", "V*", "Integer", "Date", "Others"];  // Categories for the version formats
+
+// Function to update the barchart with new data
+function update_render(api_v_formats, api_v_methods, endpoint_v_formats, endpoint_v_methods) {
     d3.select("#barchart").selectAll("*").remove();  // Clear the existing chart
-    render(new_input, "#barchart");  // Render the chart with new data
+    d3.select("#barchart2").selectAll("*").remove();  // Clear the existing chart
+    d3.select("#barchart3").selectAll("*").remove();  // Clear the existing chart
+    d3.select("#barchart4").selectAll("*").remove();  // Clear the existing chart
+    render(api_v_formats, "#barchart", categories);  // Render the chart with new data
+    render(api_v_methods, "#barchart2", categories_2);
+    render(endpoint_v_formats, "#barchart3", categories);
+    render(endpoint_v_methods, "#barchart4", categories_2);
 }
 
-// Initial render of the bar chart
+// Initial render of the API barcharts
 render(input, "#barchart", categories);
+render(input2, "#barchart2", categories_2);
 
-// Additional test data and categories
-let input_2 = [30, 40];
-const categories_2 = ["URL", "Non-URL"];
-render(input_2, "#barchart2", categories_2);
+// Initial render of the Endpoint barcharts
+render(input3, "#barchart3", categories);
+render(input4, "#barchart4", categories_2);
 
-// Test button for selenium

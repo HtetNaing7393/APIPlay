@@ -42,7 +42,6 @@ endpoint_versions_count = {
     "url": 0,
     "non-url": 0,
     "total": 0,
-    "location": {}
 }
 
 api_versions_count = {
@@ -55,7 +54,6 @@ api_versions_count = {
     "url": 0,
     "non-url": 0,
     "total": 0,
-    "location": {}
 }
 
 overall_info = {
@@ -95,7 +93,7 @@ def get_links(link):
     response = requests.get(link)
     item = response.json()
     links_list = []
-    count = 100000000000000
+    count = 1000000000000
     # get the total number of APIs in the dataset
     overall_info["apis"] = len(item)
     # access the json object to locate "versions" header and the "swaggerURL" header
@@ -230,7 +228,7 @@ def locate_and_identify_version(link, versions_count):
         if look_for_version(s):
             test_value += 1
             identify(f"{s}", versions_count)
-            find_version_location(location, versions_count)
+            # find_version_location(location, versions_count)
             return True
         else:
             sub_s = s.split(".")
@@ -238,7 +236,7 @@ def locate_and_identify_version(link, versions_count):
                 if look_for_version(s_):
                     test_value += 1
                     identify(f"{s}", versions_count)
-                    find_version_location(location, versions_count)
+                    # find_version_location(location, versions_count)
                     return True
         location += 1
     return False
@@ -306,7 +304,6 @@ def reset_data():
     global version_location_data
     global api_versions_count
     api_versions_count = {
-        "total": 0,
         "sem_ver_3": 0,
         "sem_ver_2": 0,
         "v_star": 0,
@@ -319,7 +316,6 @@ def reset_data():
     }
     global endpoint_versions_count
     endpoint_versions_count = {
-        "total": 0,
         "sem_ver_3": 0,
         "sem_ver_2": 0,
         "v_star": 0,
@@ -347,6 +343,7 @@ def execute(url):
     result = compile_version_data()  # prepare data to send to the JS file
     # print(len(api_base_urls))
     # print(len(api_versions_count))
+    print(api_versions_count)
     return result
 
 
@@ -354,7 +351,7 @@ def execute(url):
 # execute("https://api.apis.guru/v2/list.json")
 
 
-##### Functions for printing information and testing #####
+############################## Functions for printing information and testing #########################
 
 
 def test(test_str):
