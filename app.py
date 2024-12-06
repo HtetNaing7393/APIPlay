@@ -4,7 +4,7 @@ import re
 import json
 from flask import Flask, redirect, request, render_template, jsonify
 from utilities.functions import execute
-from fetch_google import get_api_data
+
 
 
 
