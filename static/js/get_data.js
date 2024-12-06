@@ -24,8 +24,6 @@ function callFunction() {
             document.getElementById("num_api_versions").innerText = api_info["total"]
             document.getElementById("num_endpoint_versions").innerText = endpoint_info["total"]
 
-            document.getElementById("test").innerText = api_v_methods;
-
             update = update_render(api_v_formats, api_v_methods, endpoint_v_formats, endpoint_v_methods);
 
             button.disabled = false;
@@ -34,7 +32,7 @@ function callFunction() {
 
 function get_v_formats(array) {
     let result = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
         result.push(array[i])
     }
     return result;

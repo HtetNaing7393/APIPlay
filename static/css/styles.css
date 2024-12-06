@@ -5,6 +5,12 @@ body {
     padding: 5px;
 }
 
+img {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 4px 6px 8px rgba(100, 100, 100, 0.5);
+}
+
 /* Define a grid container with two columns and two rows, with gaps and padding */
 .grid-container {
     display: grid;
@@ -17,10 +23,10 @@ body {
 /* Style for grid items with a background gradient, height, color, padding, and border */
 .grid-item-1,
 .grid-item-2 {
-    background: linear-gradient(to bottom, rgb(83, 74, 5), rgb(34, 173, 57));
+    background: linear-gradient(to bottom, rgb(83, 74, 5), rgb(3, 73, 15));
     /* width: 40vw; */
     height: 60vh;
-    color: black;
+    color: whitesmoke;
     padding: 20px;
     text-align: center;
     border: 1px solid #ddd;

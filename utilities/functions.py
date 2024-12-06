@@ -117,7 +117,6 @@ def get_links(link):
             finally:
                 pass
         count -= 1
-    # print(f"Num of specs: {len(links_list)}")
     return links_list  # the list of swagger links of each version of each api
 
 
@@ -228,7 +227,6 @@ def locate_and_identify_version(link, versions_count):
         if look_for_version(s):
             test_value += 1
             identify(f"{s}", versions_count)
-            # find_version_location(location, versions_count)
             return True
         else:
             sub_s = s.split(".")
@@ -236,7 +234,6 @@ def locate_and_identify_version(link, versions_count):
                 if look_for_version(s_):
                     test_value += 1
                     identify(f"{s}", versions_count)
-                    # find_version_location(location, versions_count)
                     return True
         location += 1
     return False
@@ -289,7 +286,6 @@ def compile_version_data():
     version_information.append(overall_info)
     version_information.append(api_versions_count)
     version_information.append(endpoint_versions_count)
-    # print(overall_info)
     return version_information
 
 
@@ -341,11 +337,7 @@ def execute(url):
     extract_version_location(api_endpoints, endpoint_versions_count)
     extract_version_location(api_base_urls, api_versions_count)
     result = compile_version_data()  # prepare data to send to the JS file
-    # print(len(api_base_urls))
-    # print(len(api_versions_count))
-    print(api_versions_count)
     return result
-
 
 # execute the script
 # execute("https://api.apis.guru/v2/list.json")
@@ -354,34 +346,4 @@ def execute(url):
 ############################## Functions for printing information and testing #########################
 
 
-def test(test_str):
-    pattern = r"v\d+(\.\d+)*(\([a-zA-Z]+\))?"
-    if re.search(pattern, test_str):
-        print("Match")
-    else:
-        print("Doesn't match")
 
-
-def run():
-    coll = ["v1.0.1", "v123", "v1.0",
-            "v1.9(alpha)", "v1", "v1aplpha",  "v5(alpha)", "v1.0.1(alpha)", "v1.0.1alpha", "v212"]
-    print(len(coll))
-    for c in coll:
-        result = test(c)
-
-
-test_string = "https://abc/v2/aa/bb/cc/dd"
-test_string1 = "abc/def/v1.1/ddd/fff/jkl"
-
-
-def version_heirarchy(str):
-    sub = str.split('/')
-    for s in sub:
-        if s is not None:
-            print(s)
-    # print(sub)
-# version_heirarchy(test_string1)
-# run()
-
-##################  Test Code ####################
-########## Will Handle it later ##################
